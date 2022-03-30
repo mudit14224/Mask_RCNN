@@ -311,6 +311,8 @@ class ProposalLayer(Layer):
                                   lambda x: clip_boxes_graph(x, window),
                                   self.config.IMAGES_PER_GPU,
                                   names=["refined_anchors_clipped"])
+        proposals = tf.reshape(proposals, [-1, self.proposal_count, 4])
+        scores_after_nms = tf.reshape(scores_after_nms, [-1, self.proposal_count])
 
         # Filter out small boxes
         # According to Xinlei Chen's paper, this reduces detection accuracy
@@ -328,8 +330,6 @@ class ProposalLayer(Layer):
             return proposals
         proposals = utils.batch_slice([boxes, scores], nms,
                                       self.config.IMAGES_PER_GPU)
-        proposals = tf.reshape(proposals, [-1, self.proposal_count, 4])
-        scores_after_nms = tf.reshape(scores_after_nms, [-1, self.proposal_count])
         return proposals
 
     def compute_output_shape(self, input_shape):
