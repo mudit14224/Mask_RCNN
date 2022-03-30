@@ -2102,7 +2102,7 @@ class MaskRCNN():
         # Conditional import to support versions of Keras before 2.2
         # TODO: remove in about 6 months (end of 2018)
         try:
-            from keras.engine import saving
+            from tensorflow.python.keras import saving 
         except ImportError:
             # Keras before 2.2 used the 'topology' namespace.
             from keras.engine import topology as saving
